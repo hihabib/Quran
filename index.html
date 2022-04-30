@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="vid-back stopped">
+        <video muted class="myVideo" class="myVideo">
+            <source src="videos/11.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo" class="myVideo">
+            <source src="videos/10.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/9.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/8.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/7.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/12.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/6.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/13.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/12.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/6.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/5.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/4.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/3.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/2.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/15.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/14.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/1.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back stopped">
+        <video muted class="myVideo">
+            <source src="videos/17.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="vid-back playing">
+        <video autoplay muted class="myVideo">
+            <source src="videos/16.mp4" type="video/mp4">
+        </video>
+    </div>
+    
+
+
+    <div class="container">
+        <ul>
+        </ul>
+    </div>
+
+    <script>
+        const ul = document.querySelector('ul');
+        const { port1, port2 } = new MessageChannel();
+
+        window.opener.postMessage('message', '*', [port2]);
+        port1.onmessage = (e) => {
+            let countAyah = 0;
+            Object.values(e.data).forEach(ayah => {
+                countAyah += 1;
+                // create elements with the ayah
+                const li = document.createElement('li');
+                const spanArabic = document.createElement('span');
+                const spanBengali = document.createElement('span');
+                spanArabic.innerText = ayah[0];
+                spanArabic.classList.add('arabic-text');
+                spanBengali.innerText = countAyah + '. ' + ayah[1];
+                spanBengali.classList.add('bengali-text');
+                li.style.display = 'none';
+                li.classList.add('full-ayah');
+
+                // append
+                li.append(spanArabic);
+                li.append(spanBengali);
+                ul.append(li);
+            })
+
+            // after getting all ayah
+            const firstLi = document.querySelectorAll('li')[0];
+            firstLi.style.display = 'flex';
+            firstLi.classList.add('active');
+            document.addEventListener('keydown', (event) => {
+                // console.log(event.key);
+                const blockLi = document.querySelector('li.active')
+                const nextLi = document.querySelector('li.active + li')
+                const prevLi = document.querySelector('li.active').previousSibling;
+
+                switch (event.key) {
+                    case 'ArrowRight':
+                        if (nextLi?.classList?.contains('full-ayah')) {
+                            // hide current ayah
+                            blockLi.classList.remove('active');
+                            blockLi.style.display = 'none';
+
+                            // show next ayah
+                            nextLi.classList.add('active');
+                            nextLi.style.display = 'flex';
+                        }
+                        break;
+                    case 'ArrowLeft':
+                        if (prevLi?.classList?.contains('full-ayah')) {
+                            // hide current ayah
+                            blockLi.classList.remove('active');
+                            blockLi.style.display = 'none';
+
+                            // show previous ayah
+                            prevLi.classList.add('active');
+                            prevLi.style.display = 'flex';
+                        }
+                        break;
+                }
+            })
+        }
+
+        // background video
+        window.onload = function () {
+            //now that the window has loaded we add our event listeners to the videos.
+            //When video1 has ended, play video2 etc
+            const videoBackParent = document.querySelectorAll('.vid-back');
+            const allVideos = document.querySelectorAll('.myVideo');
+            for (let i = allVideos.length - 1; i >= 0; i--) {
+                allVideos[i].addEventListener('ended', function () {
+                    this.style.display = 'none';
+                    
+                    videoBackParent[i].style.display = 'none';
+                    videoBackParent[i].classList.add('stopped');
+                    videoBackParent[i].classList.remove('playing');
+                    
+                    if (i !== 0) {
+                        playVideo(allVideos[i - 1]);
+
+                        // if key press down, then stop the loop
+                        document.addEventListener('keydown', function(event){
+                            if(event.key === 'ArrowDown') {
+                                window.stop = true;
+                            }
+                        });
+                        if(window.stop) {
+                            return;
+                        }
+
+                    } else {
+                        // remove display-none from every video
+                        videoBackParent.forEach(videoParent => {
+                            videoParent.style.display = 'flex';
+                            videoParent.children[0].style.display = 'block';
+                        })
+                        // play loop
+                        allVideos[allVideos.length-1].style.display = 'block';
+                        videoBackParent[allVideos.length-1].style.display = 'flex';
+                        videoBackParent[allVideos.length-1].classList.add('playing');
+                        videoBackParent[allVideos.length-1].classList.remove('stopped');
+                        playVideo(allVideos[allVideos.length-1]);
+                    }
+                });
+            }
+            
+            document.addEventListener('keydown', function(event){
+                const playing = document.querySelector('.playing');
+                switch(event.key) {
+                    case "ArrowUp":
+                        const prevClasses = Array.from(document?.querySelector('.playing')?.previousElementSibling?.classList) || [];
+                        // on arrow up key press to stop current video and play previous video
+                        if(prevClasses?.indexOf('vid-back')+1) {
+                            // stop current video
+                            playing.classList.remove('playing');
+                            playing.classList.add('stopped');
+                            playing.style.display = 'none';
+                            playing.children[0].style.display = 'none';
+                            playing.children[0].currentTime = 0;
+                            playing.children[0].pause();
+                            // start next video
+                            playing.previousElementSibling.classList.add('playing');
+                            playing.previousElementSibling.classList.remove('stopped');
+                            playing.previousElementSibling.removeAttribute('style');
+                            playing.previousElementSibling.children[0].removeAttribute('style');
+                            playVideo(playing.previousElementSibling.children[0])
+                        }
+                        break;
+                    case "ArrowDown":
+                        const nextClasses = Array.from(document?.querySelector('.playing')?.nextElementSibling?.classList) || [];
+                        // on arrow down key press to stop current video and play next video
+                        if((nextClasses?.indexOf('vid-back')+1)) {
+                            // stop current video
+                            playing.classList.remove('playing');
+                            playing.classList.add('stopped');
+                            playing.children[0].currentTime = 0;
+                            playing.children[0].pause();
+                            // play next video
+                            playing.nextElementSibling.classList.add('playing');
+                            playing.nextElementSibling.classList.remove('stopped');
+                            playing.nextElementSibling.removeAttribute('style');
+                            playing.nextElementSibling.children[0].removeAttribute('style');
+                            playVideo(playing.nextElementSibling.children[0])
+                        }
+                        break;
+                    case " ": 
+                        // press space to play from start
+                        playing.children[0].currentTime = 0;
+                        break;
+                    break;
+                }
+            })
+        }
+
+        function playVideo(videoElement) {
+            videoElement.parentElement.classList.remove('stopped');
+            videoElement.parentElement.classList.add('playing');
+
+            // play from start everytime
+            videoElement.currentTime = 0;
+            videoElement.play();
+        }
+    </script>
+</body>
+
+</html>
